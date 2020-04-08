@@ -12,4 +12,12 @@ function initMap() {
         zoom: 11,
         mapTypeId: 'roadmap',
     });
+
+    // create marker and set its position
+    var marker = new google.maps.Marker({
+        map: map,
+        position: losAngeles,
+        title: 'losAngeles'
+    });
+
 }
