@@ -21,6 +21,18 @@ function initMap() {
         mapTypeId: 'roadmap',
     });
 
+    // Initiallize the info window
+    infoWindow = new google.maps.InfoWindow();
+    showStoresMarkers();
+    
+
+    // create marker and set its position
+    var marker = new google.maps.Marker({
+        map: map,
+        position: losAngeles,
+        icon: storeIcon,
+        title: 'losAngeles'
+    });
 
 }
 
@@ -50,6 +62,12 @@ function displayStores(){
     }
 }
 
+/******** */
+// document.querySelector('.store-container').innerHTML = {
+      
+// }
+/******** */
+
 // Show stores markers on the map
 function showStoresMarkers(){
     var bounds = new google.maps.LatLngBounds();
@@ -66,3 +84,25 @@ function showStoresMarkers(){
     map.fitBounds(bounds);
 }
 
+function createMarker(latlng, name, address, index){
+    const exploreIcon = '<i class="fas fa-search" style="color: #1785A1"></i>';
+    const phoneIcon = '<i class="fas fa-phone" style="color: #1785A1"></i>';
+    var openStatusText = stores['openStatusText'];
+    var html = `
+        <b> ${name} </b> <br/> 
+        OPen at 86pm <br/> <hr> <br/> 
+        ${exploreIcon} ${address} <br />
+        ${phoneIcon} ${stores.phone}
+    `;
+    var marker = new google.maps.Marker({
+      map: map,
+      position: latlng,
+      label: index.toString(),
+      icon: 'images/store2.png'
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+      infoWindow.setContent(html);
+      infoWindow.open(map, marker);
+    });
+    markers.push(marker);
+}
