@@ -30,7 +30,6 @@ function initMap() {
     var marker = new google.maps.Marker({
         map: map,
         position: losAngeles,
-        icon: storeIcon,
         title: 'losAngeles'
     });
 
@@ -85,24 +84,30 @@ function showStoresMarkers(){
 }
 
 function createMarker(latlng, name, address, index){
-    const exploreIcon = '<i class="fas fa-search" style="color: #1785A1"></i>';
-    const phoneIcon = '<i class="fas fa-phone" style="color: #1785A1"></i>';
+    const exploreIcon = '<i class="fab fa-telegram" style="color: #1785A1"></i>';
+    const phoneIcon = '<i class="fas fa-phone-alt" style="color: #1785A1"></i>';
     var openStatusText = stores['openStatusText'];
     var html = `
         <b> ${name} </b> <br/> 
-        OPen at 86pm <br/> <hr> <br/> 
+        ${openStatusText} <br/> <hr> <br/> 
         ${exploreIcon} ${address} <br />
-        ${phoneIcon} ${stores.phone}
+        ${phoneIcon} ${stores['storeNumber']}
     `;
     var marker = new google.maps.Marker({
       map: map,
       position: latlng,
-      label: index.toString(),
-      icon: 'images/store2.png'
+      icon: 'images/store3.png'
     });
     google.maps.event.addListener(marker, 'click', function() {
       infoWindow.setContent(html);
       infoWindow.open(map, marker);
     });
+    
+    google.maps.event.addListener(document.querySelector('.store-info-container'), 'click', function() {
+        infoWindow.setContent(html);
+        infoWindow.open(map, marker);
+        console.log('storeContainer clicked');
+        
+      });
     markers.push(marker);
 }
