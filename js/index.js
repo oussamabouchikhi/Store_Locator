@@ -1,6 +1,6 @@
 
 window.onload = function() {
-    displayStores();
+
 }
 
 var map;
@@ -23,18 +23,45 @@ function initMap() {
 
     // Initiallize the info window
     infoWindow = new google.maps.InfoWindow();
-    showStoresMarkers();
-    
-
-    // create marker and set its position
-    var marker = new google.maps.Marker({
-        map: map,
-        position: losAngeles,
-        title: 'losAngeles'
-    });
+    searchStores();
 
 }
 
+function searchStores(){
+    var foundStores = [];
+    var zipCode = document.getElementById('zip-code-input').value;
+    if(zipCode){
+        for(var store of stores){
+            var postal = store['address']['postalCode'].substring(0, 5);
+            if(postal == zipCode){
+                foundStores.push(store);
+            }
+        }
+    } else {
+        foundStores = stores;
+    }
+    clearLocations();
+    displayStores(foundStores);
+    showStoresMarkers(foundStores);
+    setOnClickListener();
+}
+
+function clearLocations(){
+    infoWindow.close();
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers.length = 0;
+}
+
+function setOnClickListener(){
+    var storeElements = document.querySelectorAll('.store-container');
+    storeElements.forEach(function(elem, index){
+        elem.addEventListener('click', function(){
+            new google.maps.event.trigger(markers[index], 'click');
+        })
+    })
+}
 
 function displayStores(){
     var storesHtml = '';
@@ -61,14 +88,9 @@ function displayStores(){
     }
 }
 
-/******** */
-// document.querySelector('.store-container').innerHTML = {
-      
-// }
-/******** */
 
 // Show stores markers on the map
-function showStoresMarkers(){
+function showStoresMarkers(stores){
     var bounds = new google.maps.LatLngBounds();
     for(var [index, store] of stores.entries()){
         var latlng = new google.maps.LatLng(
@@ -76,38 +98,46 @@ function showStoresMarkers(){
             store["coordinates"]["longitude"]);
         var name = store["name"];
         var address = store["addressLines"][0];
-
+        var openStatusText = store["openStatusText"]
+        var phoneNumber = store["phoneNumber"];
         bounds.extend(latlng);
-        createMarker(latlng, name, address, index+1)
+        createMarker(latlng, name, address, openStatusText, phoneNumber, index+1);
     }
     map.fitBounds(bounds);
 }
 
-function createMarker(latlng, name, address, index){
-    const exploreIcon = '<i class="fab fa-telegram" style="color: #1785A1"></i>';
-    const phoneIcon = '<i class="fas fa-phone-alt" style="color: #1785A1"></i>';
-    var openStatusText = stores['openStatusText'];
+function createMarker(latlng, name, address, openStatusText, phoneNumber, index){
     var html = `
-        <b> ${name} </b> <br/> 
-        ${openStatusText} <br/> <hr> <br/> 
-        ${exploreIcon} ${address} <br />
-        ${phoneIcon} ${stores['storeNumber']}
+        <div class="store-info-window">
+            <div class="store-info-name">
+                ${name}
+            </div>
+            <div class="store-info-status">
+                ${openStatusText}
+            </div>
+            <div class="store-info-address">
+                <div class="circle">
+                    <i class="fas fa-location-arrow"></i>
+                </div>
+                ${address}
+            </div>
+            <div class="store-info-phone">
+                <div class="circle">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                ${phoneNumber}
+            </div>
+        </div>
     `;
     var marker = new google.maps.Marker({
       map: map,
       position: latlng,
+      label: index.toString(),
       icon: 'images/store3.png'
     });
     google.maps.event.addListener(marker, 'click', function() {
       infoWindow.setContent(html);
       infoWindow.open(map, marker);
     });
-    
-    google.maps.event.addListener(document.querySelector('.store-info-container'), 'click', function() {
-        infoWindow.setContent(html);
-        infoWindow.open(map, marker);
-        console.log('storeContainer clicked');
-        
-      });
     markers.push(marker);
 }
