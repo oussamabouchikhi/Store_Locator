@@ -23,13 +23,45 @@ function initMap() {
 
     // Initiallize the info window
     infoWindow = new google.maps.InfoWindow();
-
+    searchStores();
 
 }
 
+function searchStores(){
+    var foundStores = [];
+    var zipCode = document.getElementById('zip-code-input').value;
+    if(zipCode){
+        for(var store of stores){
+            var postal = store['address']['postalCode'].substring(0, 5);
+            if(postal == zipCode){
+                foundStores.push(store);
+            }
+        }
+    } else {
+        foundStores = stores;
+    }
+    clearLocations();
+    displayStores(foundStores);
+    showStoresMarkers(foundStores);
+    setOnClickListener();
+}
 
+function clearLocations(){
+    infoWindow.close();
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers.length = 0;
+}
 
-
+function setOnClickListener(){
+    var storeElements = document.querySelectorAll('.store-container');
+    storeElements.forEach(function(elem, index){
+        elem.addEventListener('click', function(){
+            new google.maps.event.trigger(markers[index], 'click');
+        })
+    })
+}
 
 function displayStores(){
     var storesHtml = '';
