@@ -8,6 +8,10 @@ The 6-Figure JavaScript Developer Challenge project where we built a store locat
     <img src="screenshots/wireframe.png" alt="wireframe" />
 </p>
 <p align="center">
+    <h3 align="center">Design</h3>
+    <img src="screenshots/store-locator.png" alt="UI design" />
+</p>
+<p align="center">
     <h3 align="center">Live app</h3>
     <img src="screenshots/demo.gif" alt="live app" />
 </p>
@@ -36,3 +40,8 @@ Replace __YOUR_API_KEY__ with your key in ```index.html```
 </script>
 ```
 
+## Contributing
+Pull requests are welcome, feel free to ```fork``` this repo.
+
+## License
+This project is open sourced under the [MIT](https://opensource.org/licenses/MIT) license.
