@@ -1,6 +1,6 @@
-## Google Maps Challenge
+## Store Locator
 
-The 6-Figure JavaScript Developer Challenge project where we built a store locator using the google map api
+Store locator using the google map api
 
 ## Screenshots
 <p align="center">
